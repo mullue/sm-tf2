@@ -12,7 +12,7 @@ def parse_args():
     
     parser = argparse.ArgumentParser()
 
-    # hyperparameters sent by the client are passed as command-line arguments to the script
+    # 사용자가 전달한 하이퍼 파라미터를 command-line argument로 전달받아 사용함
     parser.add_argument('--epochs', type=int, default=1)
     parser.add_argument('--batch_size', type=int, default=64)
     parser.add_argument('--learning_rate', type=float, default=0.1)
@@ -46,9 +46,12 @@ def get_test_data(test_dir):
    
 
 if __name__ == "__main__":
-        
+    
+    # 환경변수 또는 사용자 지정 hyperparameter로 전달된 argument를 읽는다.
     args, _ = parse_args()
     
+    # training data를 가져온다. 위 코드에서 읽은 argument 중 'train'으로 전달된 값을 사용함. 
+    # parse_args()를 통해 환경변수 'SM_CHANNEL_TRAIN'로 전달된 경로 'opt/ml/input/train/'가 'arg.train'으로 지정됨
     x_train, y_train = get_train_data(args.train)
     x_test, y_test = get_test_data(args.test)
     
@@ -71,7 +74,7 @@ if __name__ == "__main__":
         scores = model.evaluate(x_test, y_test, batch_size, verbose=2)
         print("\nTest MSE :", scores)
         
-        # save model
+        # 결과모델 저장 - 'args.model_dir'에는 'SM_MODEL_DIR' 환경변수를 통해 지정된 '/opt/ml/model/' 경로가 지정된다.
         model.save(args.model_dir + '/1')
         
         
